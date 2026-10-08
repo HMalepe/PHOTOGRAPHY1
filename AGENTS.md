@@ -10,6 +10,6 @@
 <!-- LOVABLE:END -->
 
 ## Architecture
-- Keep the photography experience on the index route as one continuous gallery; its scroll choreography depends on an uninterrupted document.
+- Give each photography category its own route using the shared PhotographyGallery component; each route keeps a continuous scroll experience without duplicating presentation logic.
 - Use the reusable gallery scroll hook to update motion CSS variables through requestAnimationFrame, avoiding React renders per scroll event and honoring reduced motion.
 - Define gallery presentation and color roles in the global design system and use the gallery Button variant for contact actions.
