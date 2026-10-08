@@ -15,7 +15,7 @@ export function useGalleryScroll() {
       for (const element of elements) {
         const rect = element.getBoundingClientRect();
         const p = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
-        const direction = element.dataset.direction === "right" ? 1 : -1;
+        const direction = element.dataset["direction"] === "right" ? 1 : -1;
         const enter = Math.max(0, 1 - p / 0.32);
         const exit = Math.max(0, (p - 0.65) / 0.35);
         const reduced = preference.matches;
