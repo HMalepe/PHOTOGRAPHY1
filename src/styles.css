@@ -191,7 +191,7 @@ body { margin: 0; font-family: var(--font-sans); letter-spacing: 0; background-i
 .photograph-window img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--gallery-ease); }
 .photograph-frame:hover img { transform: scale(1.04); }
 .photograph-frame figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; font: 11px var(--font-mono); color: var(--muted-foreground); }
-.film-reel { padding-top: 0; }
+.selected-work + .film-reel { padding-top: 0; }
 .film-frame { width: min(100%, 720px); }
 .film-window { position: relative; overflow: hidden; border-radius: 14px; aspect-ratio: 16/9; background: oklch(0 0 0); }
 .film-window video { width: 100%; height: 100%; object-fit: cover; display: block; }

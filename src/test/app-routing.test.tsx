@@ -18,4 +18,8 @@ describe("App routing", () => {
     const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
     expect(router.matchRoutes("/portraits").at(-1)?.routeId).toBe("/portraits");
   });
+  it("matches the films reel", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/films").at(-1)?.routeId).toBe("/films");
+  });
 });

@@ -18,14 +18,15 @@ interface PhotographyGalleryProps {
   cover: string;
   coverAlt: string;
   introLabel: string;
-  workHeading: string;
-  works: GalleryWork[];
+  scrollLabel?: string;
+  workHeading?: string;
+  works?: GalleryWork[];
   films?: GalleryFilm[];
   filmHeading?: string;
   contactTitle: string;
   contactText: string;
 }
-export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt, introLabel, workHeading, works, films = [], filmHeading = "Films", contactTitle, contactText }: PhotographyGalleryProps) {
+export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt, introLabel, scrollLabel = "SELECTED PHOTOGRAPHS", workHeading = "Photographs", works = [], films = [], filmHeading = "Films", contactTitle, contactText }: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
   return (
     <main ref={galleryRef} className="gallery-site">
@@ -35,6 +36,7 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
           <Link to="/" aria-label={`${studio.name} — home`}><img className="studio-logo" src={logo} width={831} height={684} alt="" /></Link>
           <nav className="category-nav" aria-label="Photography categories">
             <Button variant="ghost" asChild><Link to="/" activeOptions={{ exact: true }}>Weddings</Link></Button>
+            <Button variant="ghost" asChild><Link to="/films">Films</Link></Button>
             <Button variant="ghost" asChild><Link to="/portraits">Portraits</Link></Button>
           </nav>
         </header>
@@ -49,22 +51,24 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
             </div>
           </div>
         </div>
-        <div className="intro-bottom"><span>{introLabel}</span><span aria-hidden="true">↓</span><span>SELECTED PHOTOGRAPHS</span></div>
+        <div className="intro-bottom"><span>{introLabel}</span><span aria-hidden="true">↓</span><span>{scrollLabel}</span></div>
       </section>
 
-      <section className="selected-work" aria-labelledby="work-heading">
-        <div className="work-heading"><h2 id="work-heading">{workHeading}</h2><span>01 — {String(works.length).padStart(2, "0")}</span></div>
-        <div className="work-list">
-          {works.map((work, index) => (
-            <div className={`work-row ${index === 1 ? "work-row-right" : ""}`} key={work.title} data-scroll-frame data-direction={index === 1 ? "right" : "left"}>
-              <figure className="photograph-frame">
-                <div className="photograph-window"><img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} /></div>
-                <figcaption><span>{String(index + 1).padStart(2, "0")} — {work.title}</span><span>{work.category}</span></figcaption>
-              </figure>
-            </div>
-          ))}
-        </div>
-      </section>
+      {works.length > 0 && (
+        <section className="selected-work" aria-labelledby="work-heading">
+          <div className="work-heading"><h2 id="work-heading">{workHeading}</h2><span>01 — {String(works.length).padStart(2, "0")}</span></div>
+          <div className="work-list">
+            {works.map((work, index) => (
+              <div className={`work-row ${index === 1 ? "work-row-right" : ""}`} key={work.title} data-scroll-frame data-direction={index === 1 ? "right" : "left"}>
+                <figure className="photograph-frame">
+                  <div className="photograph-window"><img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} /></div>
+                  <figcaption><span>{String(index + 1).padStart(2, "0")} — {work.title}</span><span>{work.category}</span></figcaption>
+                </figure>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {films.length > 0 && (
         <section className="selected-work film-reel" aria-labelledby="film-heading">

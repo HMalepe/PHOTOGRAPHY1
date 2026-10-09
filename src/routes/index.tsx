@@ -5,12 +5,9 @@ import celebration from "@/assets/wedding-celebration.jpg";
 import details from "@/assets/wedding-details.jpg";
 import dance from "@/assets/wedding-dance.jpg";
 import type { GalleryFilm } from "@/components/film-clip";
+import { mixkit } from "@/lib/placeholder-films";
 
-// Placeholder clips from Mixkit's free stock library until the client's own wedding films replace them.
-const mixkit = (id: number, slug: string) => [
-  `https://assets.mixkit.co/videos/${id}/${id}-720.mp4`,
-  `https://assets.mixkit.co/videos/preview/mixkit-${slug}-${id}-large.mp4`,
-];
+
 const weddingFilms: GalleryFilm[] = [
   { sources: mixkit(5217, "wedding-ceremony"), poster: couple, title: "The ceremony", category: "WEDDING FILM", label: "Wedding ceremony film clip" },
   { sources: mixkit(35895, "wedding-stuff-background-video"), poster: details, title: "The details", category: "WEDDING FILM", label: "Close-up film clip of wedding details" },
