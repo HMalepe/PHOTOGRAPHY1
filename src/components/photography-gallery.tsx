@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
+import { studio } from "@/lib/studio";
 
 export interface GalleryWork {
   image: string;
@@ -27,7 +28,7 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
       <section className="gallery-intro" aria-label={`${title} photography`}>
         <div className="silver-word" aria-hidden="true">{backdrop}</div>
         <header className="studio-header">
-          <span>LUMEN STUDIO</span>
+          <span>{studio.shortName}</span>
           <nav className="category-nav" aria-label="Photography categories">
             <Button variant="ghost" asChild><Link to="/" activeOptions={{ exact: true }}>Weddings</Link></Button>
             <Button variant="ghost" asChild><Link to="/portraits">Portraits</Link></Button>
@@ -66,9 +67,14 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
           <span className="contact-label">A CONVERSATION, A POSSIBILITY</span>
           <h2 id="contact-heading">{contactTitle}</h2>
           <p>{contactText}</p>
-          <Button variant="gallery" asChild><a href="mailto:hello@lumen.studio"><span aria-hidden="true">↗</span> hello@lumen.studio</a></Button>
+          <Button variant="gallery" asChild><a href={`mailto:${studio.email}`}><span aria-hidden="true">↗</span> {studio.email}</a></Button>
+          <ul className="social-links" aria-label={`${studio.name} on social media`}>
+            {studio.socials.map((social) => (
+              <li key={social.label}><a href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a></li>
+            ))}
+          </ul>
         </div>
-        <footer className="studio-footer"><span>LUMEN STUDIO</span><span>LIGHT &amp; SILENCE</span><span>© 2026</span></footer>
+        <footer className="studio-footer"><span>{studio.shortName}</span><span>{studio.location.toUpperCase()}</span><span>© {new Date().getFullYear()}</span></footer>
       </section>
     </main>
   );

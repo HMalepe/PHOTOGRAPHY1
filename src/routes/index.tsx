@@ -7,10 +7,10 @@ import dance from "@/assets/wedding-dance.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "Wedding Photography — Lumen Studio" },
-    { name: "description", content: "Intimate wedding photography by Elena Voss. The moments, details, and celebrations that tell your love story." },
-    { property: "og:title", content: "Wedding Photography — Lumen Studio" },
-    { property: "og:description", content: "Love, captured in light. Explore Lumen Studio's wedding photography collection." },
+    { title: "Wedding Photography & Film — Take It To Valhalla Films" },
+    { name: "description", content: "Documentary-styled wedding photography and film in Johannesburg. The moments, details, and celebrations that tell your love story." },
+    { property: "og:title", content: "Wedding Photography & Film — Take It To Valhalla Films" },
+    { property: "og:description", content: "Your day, told like a film. Explore Take It To Valhalla Films' wedding collection." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
 function WeddingsPage() {
   return <PhotographyGallery
     title="Weddings"
-    subtitle="Elena Voss — love, captured in light"
+    subtitle="Take It To Valhalla Films — your day, told like a film"
     backdrop="LOVE"
     cover={couple}
     coverAlt="Bride and groom embracing beside a sunlit window"
@@ -32,6 +32,6 @@ function WeddingsPage() {
       { image: dance, title: "Just the two of you", category: "WEDDINGS", alt: "A bride and groom sharing their first dance in an elegant ballroom" },
     ]}
     contactTitle="Let's tell your love story"
-    contactText="Wedding photography & intimate celebrations."
+    contactText="Wedding photography & videography across Johannesburg."
   />;
 }
