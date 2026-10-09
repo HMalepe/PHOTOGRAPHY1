@@ -22,13 +22,6 @@ const weddingFilms: GalleryFilm[] = [
     category: "WEDDING FILM",
     label: "Close-up film clip of wedding details",
   },
-  {
-    sources: mixkit(12160, "wedding-couple-sharing-a-romantic-moment-in-a-kitchen"),
-    poster: dance,
-    title: "Quiet moments",
-    category: "WEDDING FILM",
-    label: "Newlyweds sharing a quiet moment at home",
-  },
 ];
 
 export const Route = createFileRoute("/")({
