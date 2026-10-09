@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 import { studio } from "@/lib/studio";
+import logo from "@/assets/valhalla-logo.webp";
 
 export interface GalleryWork {
   image: string;
@@ -28,7 +29,7 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
       <section className="gallery-intro" aria-label={`${title} photography`}>
         <div className="silver-word" aria-hidden="true">{backdrop}</div>
         <header className="studio-header">
-          <span>{studio.shortName}</span>
+          <Link to="/" aria-label={`${studio.name} — home`}><img className="studio-logo" src={logo} width={831} height={684} alt="" /></Link>
           <nav className="category-nav" aria-label="Photography categories">
             <Button variant="ghost" asChild><Link to="/" activeOptions={{ exact: true }}>Weddings</Link></Button>
             <Button variant="ghost" asChild><Link to="/portraits">Portraits</Link></Button>
@@ -64,6 +65,7 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
 
       <section className="contact-section" aria-labelledby="contact-heading">
         <div className="contact-content" data-scroll-frame>
+          <img className="contact-logo" src={logo} width={831} height={684} loading="lazy" alt={`${studio.name} logo`} />
           <span className="contact-label">A CONVERSATION, A POSSIBILITY</span>
           <h2 id="contact-heading">{contactTitle}</h2>
           <p>{contactText}</p>
