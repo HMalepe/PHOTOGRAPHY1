@@ -22,6 +22,13 @@ const weddingFilms: GalleryFilm[] = [
     category: "WEDDING FILM",
     label: "Close-up film clip of wedding details",
   },
+  {
+    sources: mixkit(40627, "bride-and-groom-at-their-wedding-standing-head-on-in-a"),
+    poster: dance,
+    title: "Hand in hand",
+    category: "WEDDING FILM",
+    label: "Bride and groom holding hands and talking in a wedding garden",
+  },
 ];
 
 export const Route = createFileRoute("/")({
