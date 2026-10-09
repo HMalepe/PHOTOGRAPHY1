@@ -26,8 +26,6 @@ interface PhotographyGalleryProps {
   contactText: string;
 }
 
-const pad = (value: number) => String(value).padStart(2, "0");
-
 export function PhotographyGallery({
   title,
   eyebrow,
@@ -42,12 +40,6 @@ export function PhotographyGallery({
   contactText,
 }: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
-  // Sections are numbered in reading order, so optional ones never leave a gap in the sequence.
-  let section = 1;
-  const statementNo = section++;
-  const worksNo = works.length > 0 ? section++ : 0;
-  const filmsNo = films.length > 0 ? section++ : 0;
-  const contactNo = section;
   const marquee = [...studio.services, ...studio.services, ...studio.services];
 
   return (
@@ -87,7 +79,6 @@ export function PhotographyGallery({
       </section>
 
       <section className="section statement" aria-label="Approach">
-        <span className="section-label">({pad(statementNo)}) Approach</span>
         <p className="statement-text" data-scroll-frame>
           {statement}
         </p>
@@ -96,10 +87,8 @@ export function PhotographyGallery({
       {works.length > 0 && (
         <section className="section" aria-labelledby="work-heading">
           <div className="section-head">
-            <span className="section-label">({pad(worksNo)}) Stills</span>
             <h2 id="work-heading" className="section-title">
               {workHeading}
-              <sup className="section-count">({works.length})</sup>
             </h2>
           </div>
           <div className="works">
@@ -114,7 +103,6 @@ export function PhotographyGallery({
                   <img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} />
                 </div>
                 <figcaption>
-                  <span className="work-index">No. {pad(index + 1)}</span>
                   <span className="work-title">{work.title}</span>
                   <span className="work-category">{work.category}</span>
                 </figcaption>
@@ -127,10 +115,8 @@ export function PhotographyGallery({
       {films.length > 0 && (
         <section className="section" aria-labelledby="film-heading">
           <div className="section-head">
-            <span className="section-label">({pad(filmsNo)}) Motion</span>
             <h2 id="film-heading" className="section-title">
               {filmHeading}
-              <sup className="section-count">({films.length})</sup>
             </h2>
           </div>
           <div className="films">
@@ -143,7 +129,6 @@ export function PhotographyGallery({
               >
                 <FilmClip film={film} />
                 <figcaption>
-                  <span className="work-index">No. {pad(index + 1)}</span>
                   <span className="work-title">{film.title}</span>
                   <span className="work-category">{film.category}</span>
                 </figcaption>
@@ -170,7 +155,6 @@ export function PhotographyGallery({
       </section>
 
       <section id="contact" className="section contact" aria-labelledby="contact-heading">
-        <span className="section-label">({pad(contactNo)}) Enquiries</span>
         <h2 id="contact-heading" className="contact-title" data-scroll-frame>
           {contactTitle}
         </h2>
