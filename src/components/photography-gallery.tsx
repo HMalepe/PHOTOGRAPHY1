@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
@@ -13,12 +14,10 @@ export interface GalleryWork {
 }
 interface PhotographyGalleryProps {
   title: string;
-  subtitle: string;
-  backdrop: string;
+  eyebrow: string;
   cover: string;
   coverAlt: string;
-  introLabel: string;
-  scrollLabel?: string;
+  statement: ReactNode;
   workHeading?: string;
   works?: GalleryWork[];
   films?: GalleryFilm[];
@@ -26,81 +25,192 @@ interface PhotographyGalleryProps {
   contactTitle: string;
   contactText: string;
 }
-export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt, introLabel, scrollLabel = "SELECTED PHOTOGRAPHS", workHeading = "Photographs", works = [], films = [], filmHeading = "Films", contactTitle, contactText }: PhotographyGalleryProps) {
+
+const pad = (value: number) => String(value).padStart(2, "0");
+
+export function PhotographyGallery({
+  title,
+  eyebrow,
+  cover,
+  coverAlt,
+  statement,
+  workHeading = "Photographs",
+  works = [],
+  films = [],
+  filmHeading = "Films",
+  contactTitle,
+  contactText,
+}: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
+  // Sections are numbered in reading order, so optional ones never leave a gap in the sequence.
+  let section = 1;
+  const statementNo = section++;
+  const worksNo = works.length > 0 ? section++ : 0;
+  const filmsNo = films.length > 0 ? section++ : 0;
+  const contactNo = section;
+  const marquee = [...studio.services, ...studio.services, ...studio.services];
+
   return (
     <main ref={galleryRef} className="gallery-site">
-      <section className="gallery-intro" aria-label={`${title} photography`}>
-        <div className="silver-word" aria-hidden="true">{backdrop}</div>
-        <header className="studio-header">
-          <Link to="/" aria-label={`${studio.name} — home`}><img className="studio-logo" src={logo} width={831} height={684} alt="" /></Link>
-          <nav className="category-nav" aria-label="Photography categories">
-            <Button variant="ghost" asChild><Link to="/" activeOptions={{ exact: true }}>Weddings</Link></Button>
-            <Button variant="ghost" asChild><Link to="/films">Films</Link></Button>
-            <Button variant="ghost" asChild><Link to="/portraits">Portraits</Link></Button>
-          </nav>
-        </header>
-        <div className="intro-content">
-          <div className="intro-title">
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
-          </div>
-          <div className="portrait-motion">
-            <div className="portrait-drift">
-              <img src={cover} width={1024} height={1408} alt={coverAlt} fetchPriority="high" />
-            </div>
-          </div>
+      <header className="site-header">
+        <Link to="/" className="site-logo" aria-label={`${studio.name}, home`}>
+          <img src={logo} width={831} height={684} alt="" />
+        </Link>
+        <nav className="site-nav" aria-label="Categories">
+          <Link to="/" activeOptions={{ exact: true }}>
+            Weddings
+          </Link>
+          <Link to="/films">Films</Link>
+          <Link to="/portraits">Portraits</Link>
+        </nav>
+        <a className="site-enquire" href="#contact">
+          Enquire
+        </a>
+      </header>
+
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-media">
+          <img src={cover} width={1024} height={1408} alt={coverAlt} fetchPriority="high" />
         </div>
-        <div className="intro-bottom"><span>{introLabel}</span><span aria-hidden="true">↓</span><span>{scrollLabel}</span></div>
+        <div className="hero-curtain" aria-hidden="true" />
+        <div className="hero-content">
+          <p className="eyebrow">{eyebrow}</p>
+          <h1 id="hero-title" className="hero-title">
+            <span>{title}</span>
+          </h1>
+        </div>
+        <div className="hero-meta">
+          <span>{studio.location}</span>
+          <span>Photography &amp; Film</span>
+          <span className="hero-scroll">Scroll</span>
+        </div>
+      </section>
+
+      <section className="section statement" aria-label="Approach">
+        <span className="section-label">({pad(statementNo)}) Approach</span>
+        <p className="statement-text" data-scroll-frame>
+          {statement}
+        </p>
       </section>
 
       {works.length > 0 && (
-        <section className="selected-work" aria-labelledby="work-heading">
-          <div className="work-heading"><h2 id="work-heading">{workHeading}</h2><span>01 — {String(works.length).padStart(2, "0")}</span></div>
-          <div className="work-list">
+        <section className="section" aria-labelledby="work-heading">
+          <div className="section-head">
+            <span className="section-label">({pad(worksNo)}) Stills</span>
+            <h2 id="work-heading" className="section-title">
+              {workHeading}
+              <sup className="section-count">({works.length})</sup>
+            </h2>
+          </div>
+          <div className="works">
             {works.map((work, index) => (
-              <div className={`work-row ${index === 1 ? "work-row-right" : ""}`} key={work.title} data-scroll-frame data-direction={index === 1 ? "right" : "left"}>
-                <figure className="photograph-frame">
-                  <div className="photograph-window"><img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} /></div>
-                  <figcaption><span>{String(index + 1).padStart(2, "0")} — {work.title}</span><span>{work.category}</span></figcaption>
-                </figure>
-              </div>
+              <figure
+                className="work-item"
+                key={work.title}
+                data-scroll-frame
+                data-direction={index % 2 ? "right" : "left"}
+              >
+                <div className="work-media">
+                  <img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} />
+                </div>
+                <figcaption>
+                  <span className="work-index">No. {pad(index + 1)}</span>
+                  <span className="work-title">{work.title}</span>
+                  <span className="work-category">{work.category}</span>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </section>
       )}
 
       {films.length > 0 && (
-        <section className="selected-work film-reel" aria-labelledby="film-heading">
-          <div className="work-heading"><h2 id="film-heading">{filmHeading}</h2><span>01 — {String(films.length).padStart(2, "0")}</span></div>
-          <div className="work-list">
+        <section className="section" aria-labelledby="film-heading">
+          <div className="section-head">
+            <span className="section-label">({pad(filmsNo)}) Motion</span>
+            <h2 id="film-heading" className="section-title">
+              {filmHeading}
+              <sup className="section-count">({films.length})</sup>
+            </h2>
+          </div>
+          <div className="films">
             {films.map((film, index) => (
-              <div className={`work-row ${index % 2 ? "work-row-right" : ""}`} key={film.title} data-scroll-frame data-direction={index % 2 ? "right" : "left"}>
-                <figure className="photograph-frame film-frame">
-                  <FilmClip film={film} />
-                  <figcaption><span>{String(index + 1).padStart(2, "0")} — {film.title}</span><span>{film.category}</span></figcaption>
-                </figure>
-              </div>
+              <figure
+                className="film-item"
+                key={film.title}
+                data-scroll-frame
+                data-direction={index % 2 ? "right" : "left"}
+              >
+                <FilmClip film={film} />
+                <figcaption>
+                  <span className="work-index">No. {pad(index + 1)}</span>
+                  <span className="work-title">{film.title}</span>
+                  <span className="work-category">{film.category}</span>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </section>
       )}
 
-      <section className="contact-section" aria-labelledby="contact-heading">
-        <div className="contact-content" data-scroll-frame>
-          <img className="contact-logo" src={logo} width={831} height={684} loading="lazy" alt={`${studio.name} logo`} />
-          <span className="contact-label">A CONVERSATION, A POSSIBILITY</span>
-          <h2 id="contact-heading">{contactTitle}</h2>
-          <p>{contactText}</p>
-          <Button variant="gallery" asChild><a href={`mailto:${studio.email}`}><span aria-hidden="true">↗</span> {studio.email}</a></Button>
-          <ul className="social-links" aria-label={`${studio.name} on social media`}>
-            {studio.socials.map((social) => (
-              <li key={social.label}><a href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a></li>
-            ))}
-          </ul>
+      <section className="marquee" aria-label="Services">
+        <ul className="sr-only">
+          {studio.services.map((service) => (
+            <li key={service}>{service}</li>
+          ))}
+        </ul>
+        <div className="marquee-track" aria-hidden="true">
+          {marquee.map((service, index) => (
+            <span className="marquee-item" key={`${service}-${index}`}>
+              {service}
+              <span className="marquee-sep">/</span>
+            </span>
+          ))}
         </div>
-        <footer className="studio-footer"><span>{studio.shortName}</span><span>{studio.location.toUpperCase()}</span><span>© {new Date().getFullYear()}</span></footer>
       </section>
+
+      <section id="contact" className="section contact" aria-labelledby="contact-heading">
+        <span className="section-label">({pad(contactNo)}) Enquiries</span>
+        <h2 id="contact-heading" className="contact-title" data-scroll-frame>
+          {contactTitle}
+        </h2>
+        <div className="contact-grid">
+          <p className="contact-text">{contactText}</p>
+          <div className="contact-actions">
+            <Button variant="gallery" asChild>
+              <a href={`mailto:${studio.email}`}>
+                Start a project <span aria-hidden="true">→</span>
+              </a>
+            </Button>
+            <a className="contact-email" href={`mailto:${studio.email}`}>
+              {studio.email}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <img
+          className="footer-logo"
+          src={logo}
+          width={831}
+          height={684}
+          loading="lazy"
+          alt={`${studio.name} logo`}
+        />
+        <ul className="footer-socials" aria-label={`${studio.name} on social media`}>
+          {studio.socials.map((social) => (
+            <li key={social.label}>
+              <a href={social.href} target="_blank" rel="noopener noreferrer">
+                {social.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <span>
+          © {new Date().getFullYear()} {studio.name}
+        </span>
+      </footer>
     </main>
   );
 }
