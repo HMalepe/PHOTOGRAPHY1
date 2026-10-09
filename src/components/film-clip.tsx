@@ -56,10 +56,12 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
       <button
         type="button"
         className="film-toggle"
+        data-playing={playing}
         onClick={toggle}
         aria-label={`${playing ? "Pause" : "Play"} ${film.title}`}
       >
-        <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+        <span className="film-toggle-dot" aria-hidden="true" />
+        <span aria-hidden="true">{playing ? "Pause" : "Play"}</span>
       </button>
     </div>
   );
