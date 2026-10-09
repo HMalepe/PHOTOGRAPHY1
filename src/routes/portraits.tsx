@@ -5,10 +5,10 @@ import dancer from "@/assets/dancer.jpg";
 
 export const Route = createFileRoute("/portraits")({
   head: () => ({ meta: [
-    { title: "Portrait Photography — Lumen Studio" },
-    { name: "description", content: "Expressive portrait photography by Elena Voss. Natural light, personality, and the beauty of being yourself." },
-    { property: "og:title", content: "Portrait Photography — Lumen Studio" },
-    { property: "og:description", content: "Faces, movement, and quiet moments. Discover Lumen Studio's portrait collection." },
+    { title: "Portrait Photography — Take It To Valhalla Films" },
+    { name: "description", content: "Expressive, documentary-styled portrait photography in Johannesburg by Take It To Valhalla Films." },
+    { property: "og:title", content: "Portrait Photography — Take It To Valhalla Films" },
+    { property: "og:description", content: "Faces, movement, and quiet moments. Discover Take It To Valhalla Films' portrait collection." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/portraits")({
 function PortraitsPage() {
   return <PhotographyGallery
     title="Portraits"
-    subtitle="Elena Voss — a little light, a little soul"
+    subtitle="Take It To Valhalla Films — a little light, a little soul"
     backdrop="SOUL"
     cover={portrait}
     coverAlt="A woman holding a film camera in soft natural window light"

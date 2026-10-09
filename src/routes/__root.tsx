@@ -78,15 +78,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lumen Studio — Fine Art Photography" },
-      { name: "description", content: "Fine art photography by Elena Voss." },
+      { name: "theme-color", content: "#111111" },
+      { title: "Take It To Valhalla Films — Photography & Film, Johannesburg" },
+      { name: "description", content: "Documentary-styled photography and filmmaking by Take It To Valhalla Films, Johannesburg." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" },
       {
         rel: "stylesheet",
         href: appCss,
