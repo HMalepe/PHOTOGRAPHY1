@@ -191,6 +191,14 @@ body { margin: 0; font-family: var(--font-sans); letter-spacing: 0; background-i
 .photograph-window img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--gallery-ease); }
 .photograph-frame:hover img { transform: scale(1.04); }
 .photograph-frame figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; font: 11px var(--font-mono); color: var(--muted-foreground); }
+.film-reel { padding-top: 0; }
+.film-frame { width: min(100%, 720px); }
+.film-window { position: relative; overflow: hidden; border-radius: 14px; aspect-ratio: 16/9; background: oklch(0 0 0); }
+.film-window video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.film-window::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 80px oklch(0 0 0 / 0.55); }
+.film-toggle { position: absolute; z-index: 1; right: 14px; bottom: 14px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--primary) 55%, transparent); background: oklch(0 0 0 / 0.45); color: var(--foreground); font-size: 10px; cursor: pointer; backdrop-filter: blur(12px); }
+.film-toggle:hover { background: color-mix(in oklab, var(--primary) 35%, transparent); }
+.film-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .contact-section { position: relative; min-height: 80svh; padding: 120px 24px; display: flex; justify-content: center; align-items: center; text-align: center; }
 .contact-content { width: min(100%, 640px); padding: 64px 40px; background: var(--glass-surface); backdrop-filter: blur(32px); border: 1px solid var(--glass-edge); border-radius: 32px; box-shadow: var(--glass-shadow); }
 .contact-label { font: 9px var(--font-mono); color: var(--muted-foreground); }

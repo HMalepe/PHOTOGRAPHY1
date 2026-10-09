@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 import { studio } from "@/lib/studio";
 import logo from "@/assets/valhalla-logo.webp";
+import { FilmClip, type GalleryFilm } from "@/components/film-clip";
 
 export interface GalleryWork {
   image: string;
@@ -19,10 +20,12 @@ interface PhotographyGalleryProps {
   introLabel: string;
   workHeading: string;
   works: GalleryWork[];
+  films?: GalleryFilm[];
+  filmHeading?: string;
   contactTitle: string;
   contactText: string;
 }
-export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt, introLabel, workHeading, works, contactTitle, contactText }: PhotographyGalleryProps) {
+export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt, introLabel, workHeading, works, films = [], filmHeading = "Films", contactTitle, contactText }: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
   return (
     <main ref={galleryRef} className="gallery-site">
@@ -62,6 +65,22 @@ export function PhotographyGallery({ title, subtitle, backdrop, cover, coverAlt,
           ))}
         </div>
       </section>
+
+      {films.length > 0 && (
+        <section className="selected-work film-reel" aria-labelledby="film-heading">
+          <div className="work-heading"><h2 id="film-heading">{filmHeading}</h2><span>01 — {String(films.length).padStart(2, "0")}</span></div>
+          <div className="work-list">
+            {films.map((film, index) => (
+              <div className={`work-row ${index % 2 ? "work-row-right" : ""}`} key={film.title} data-scroll-frame data-direction={index % 2 ? "right" : "left"}>
+                <figure className="photograph-frame film-frame">
+                  <FilmClip film={film} />
+                  <figcaption><span>{String(index + 1).padStart(2, "0")} — {film.title}</span><span>{film.category}</span></figcaption>
+                </figure>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="contact-section" aria-labelledby="contact-heading">
         <div className="contact-content" data-scroll-frame>
