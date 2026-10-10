@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as FilmsRouteImport } from './routes/films'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as PortraitsRouteImport } from './routes/portraits'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +20,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FilmsRoute = FilmsRouteImport.update({
   id: '/films',
   path: '/films',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortraitsRoute = PortraitsRouteImport.update({
@@ -31,31 +43,39 @@ const PortraitsRoute = PortraitsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/films': typeof FilmsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/films': typeof FilmsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/films': typeof FilmsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/films' | '/portraits'
+  fullPaths: '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/films' | '/portraits'
-  id: '__root__' | '/' | '/films' | '/portraits'
+  to: '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
+  id: '__root__' | '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   FilmsRoute: typeof FilmsRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   PortraitsRoute: typeof PortraitsRoute
 }
 
@@ -68,11 +88,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/films': {
       id: '/films'
       path: '/films'
       fullPath: '/films'
       preLoaderRoute: typeof FilmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portraits': {
@@ -87,7 +121,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   FilmsRoute: FilmsRoute,
+  HowItWorksRoute: HowItWorksRoute,
   PortraitsRoute: PortraitsRoute,
 }
 export const routeTree = rootRouteImport
