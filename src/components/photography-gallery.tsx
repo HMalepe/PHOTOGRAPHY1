@@ -1,4 +1,6 @@
 import { useRef, type ReactNode } from "react";
+import { HeroReelControl, HeroReelVideos } from "@/components/hero-reel";
+import { useHeroReel } from "@/hooks/use-hero-reel";
 import { FadeImage } from "@/components/fade-image";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 import { useReady } from "@/hooks/use-ready";
@@ -25,6 +27,8 @@ interface PhotographyGalleryProps {
   works?: GalleryWork[];
   films?: GalleryFilm[];
   filmHeading?: string;
+  /** Pools of fallback URLs for the looping reel behind the hero; played in random order. */
+  heroReel?: readonly (readonly string[])[];
   showreel?: ShowreelData;
   enquiryProject?: string;
   contactTitle: string;
@@ -41,6 +45,7 @@ export function PhotographyGallery({
   works = [],
   films = [],
   filmHeading = "Films",
+  heroReel,
   showreel,
   enquiryProject,
   contactTitle,
@@ -49,13 +54,20 @@ export function PhotographyGallery({
   const galleryRef = useGalleryScroll();
   const heroImage = useRef<HTMLImageElement>(null);
   const ready = useReady(heroImage);
+  const reel = useHeroReel(heroReel ?? [], ready && Boolean(heroReel?.length));
 
   return (
     <main ref={galleryRef} className="gallery-site">
       <SiteHeader />
 
-      <section className="hero" aria-labelledby="hero-title" data-ready={ready || undefined}>
+      <section
+        className="hero"
+        aria-labelledby="hero-title"
+        data-ready={ready || undefined}
+        data-reel-live={reel.live || undefined}
+      >
         <div className="hero-media">
+          {heroReel && <HeroReelVideos first={reel.first} second={reel.second} />}
           <img
             ref={heroImage}
             src={cover}
@@ -72,6 +84,7 @@ export function PhotographyGallery({
             <span>{title}</span>
           </h1>
         </div>
+        {heroReel && reel.usable && <HeroReelControl paused={reel.paused} onToggle={reel.toggle} />}
         {showreel && <Showreel reel={showreel} />}
         <div className="hero-meta">
           <span>{studio.location}</span>
