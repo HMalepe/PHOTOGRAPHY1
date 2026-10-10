@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 import { studio } from "@/lib/studio";
 import logo from "@/assets/valhalla-logo.webp";
 import { FilmClip, type GalleryFilm } from "@/components/film-clip";
+import { Showreel, type ShowreelData } from "@/components/showreel";
+import { StudioProof } from "@/components/studio-proof";
+import { EnquiryForm } from "@/components/enquiry-form";
 
 export interface GalleryWork {
   image: string;
@@ -22,6 +24,8 @@ interface PhotographyGalleryProps {
   works?: GalleryWork[];
   films?: GalleryFilm[];
   filmHeading?: string;
+  showreel?: ShowreelData;
+  enquiryProject?: string;
   contactTitle: string;
   contactText: string;
 }
@@ -36,6 +40,8 @@ export function PhotographyGallery({
   works = [],
   films = [],
   filmHeading = "Films",
+  showreel,
+  enquiryProject,
   contactTitle,
   contactText,
 }: PhotographyGalleryProps) {
@@ -71,6 +77,7 @@ export function PhotographyGallery({
             <span>{title}</span>
           </h1>
         </div>
+        {showreel && <Showreel reel={showreel} />}
         <div className="hero-meta">
           <span>{studio.location}</span>
           <span>Photography &amp; Film</span>
@@ -138,6 +145,8 @@ export function PhotographyGallery({
         </section>
       )}
 
+      <StudioProof />
+
       <section className="marquee" aria-label="Services">
         <ul className="sr-only">
           {studio.services.map((service) => (
@@ -159,17 +168,13 @@ export function PhotographyGallery({
           {contactTitle}
         </h2>
         <div className="contact-grid">
-          <p className="contact-text">{contactText}</p>
-          <div className="contact-actions">
-            <Button variant="gallery" asChild>
-              <a href={`mailto:${studio.email}`}>
-                Start a project <span aria-hidden="true">→</span>
-              </a>
-            </Button>
+          <div className="contact-aside">
+            <p className="contact-text">{contactText}</p>
             <a className="contact-email" href={`mailto:${studio.email}`}>
               {studio.email}
             </a>
           </div>
+          <EnquiryForm defaultProject={enquiryProject} />
         </div>
       </section>
 

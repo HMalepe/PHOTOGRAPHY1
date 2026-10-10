@@ -89,6 +89,12 @@ function WeddingsPage() {
       ]}
       films={weddingFilms}
       filmHeading="Wedding Films"
+      showreel={{
+        sources: mixkit(5217, "wedding-ceremony"),
+        poster: couple,
+        label: "Wedding showreel",
+      }}
+      enquiryProject="Wedding"
       contactTitle="Tell us about your day"
       contactText="Wedding films and photography in Johannesburg. Send your date and venue and we'll come back to you."
     />

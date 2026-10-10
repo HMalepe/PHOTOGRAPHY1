@@ -82,6 +82,12 @@ function FilmsPage() {
       }
       films={films}
       filmHeading="Selected Films"
+      showreel={{
+        sources: mixkit(17631, "music-concert-crowd"),
+        poster: dancer,
+        label: "Take It To Valhalla showreel",
+      }}
+      enquiryProject="Music video"
       contactTitle="Take it to Valhalla"
       contactText="Music videos, corporate events, interviews and live performances. Tell us what you're making."
     />
