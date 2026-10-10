@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 
 /** Reversible, scroll-scrubbed motion without React renders on every frame. */
-export function useGalleryScroll() {
+export function useGalleryScroll({ solidHeader = false }: { solidHeader?: boolean } = {}) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -41,7 +41,10 @@ export function useGalleryScroll() {
         "--hero-shift",
         `${reduced ? 0 : Math.min(y * 0.35, viewport * 0.5)}px`,
       );
-      root.style.setProperty("--hero-fade", `${reduced ? 0 : clamp(y / (viewport * 0.9))}`);
+      root.style.setProperty(
+        "--hero-fade",
+        solidHeader ? "1" : `${reduced ? 0 : clamp(y / (viewport * 0.9))}`,
+      );
       root.style.setProperty("--marquee-x", `${reduced ? 0 : -y * 0.3}px`);
     };
     const schedule = () => {
@@ -57,7 +60,7 @@ export function useGalleryScroll() {
       window.removeEventListener("resize", schedule);
       preference.removeEventListener("change", schedule);
     };
-  }, []);
+  }, [solidHeader]);
 
   return ref;
 }

@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 import { studio } from "@/lib/studio";
-import logo from "@/assets/valhalla-logo.webp";
 import { FilmClip, type GalleryFilm } from "@/components/film-clip";
 import { Showreel, type ShowreelData } from "@/components/showreel";
-import { StudioProof } from "@/components/studio-proof";
+import { Testimonials } from "@/components/testimonials";
+import { ServicesMarquee, SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export interface GalleryWork {
@@ -46,25 +45,10 @@ export function PhotographyGallery({
   contactText,
 }: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
-  const marquee = [...studio.services, ...studio.services, ...studio.services];
 
   return (
     <main ref={galleryRef} className="gallery-site">
-      <header className="site-header">
-        <Link to="/" className="site-logo" aria-label={`${studio.name}, home`}>
-          <img src={logo} width={831} height={684} alt="" />
-        </Link>
-        <nav className="site-nav" aria-label="Categories">
-          <Link to="/" activeOptions={{ exact: true }}>
-            Weddings
-          </Link>
-          <Link to="/films">Films</Link>
-          <Link to="/portraits">Portraits</Link>
-        </nav>
-        <a className="site-enquire" href="#contact">
-          Enquire
-        </a>
-      </header>
+      <SiteHeader />
 
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-media">
@@ -145,23 +129,9 @@ export function PhotographyGallery({
         </section>
       )}
 
-      <StudioProof />
+      <Testimonials />
 
-      <section className="marquee" aria-label="Services">
-        <ul className="sr-only">
-          {studio.services.map((service) => (
-            <li key={service}>{service}</li>
-          ))}
-        </ul>
-        <div className="marquee-track" aria-hidden="true">
-          {marquee.map((service, index) => (
-            <span className="marquee-item" key={`${service}-${index}`}>
-              {service}
-              <span className="marquee-sep">/</span>
-            </span>
-          ))}
-        </div>
-      </section>
+      <ServicesMarquee />
 
       <section id="contact" className="section contact" aria-labelledby="contact-heading">
         <h2 id="contact-heading" className="contact-title" data-scroll-frame>
@@ -178,28 +148,7 @@ export function PhotographyGallery({
         </div>
       </section>
 
-      <footer className="site-footer">
-        <img
-          className="footer-logo"
-          src={logo}
-          width={831}
-          height={684}
-          loading="lazy"
-          alt={`${studio.name} logo`}
-        />
-        <ul className="footer-socials" aria-label={`${studio.name} on social media`}>
-          {studio.socials.map((social) => (
-            <li key={social.label}>
-              <a href={social.href} target="_blank" rel="noopener noreferrer">
-                {social.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <span>
-          © {new Date().getFullYear()} {studio.name}
-        </span>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
