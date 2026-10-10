@@ -9,3 +9,5 @@
 - [x] Add proof (about, Bark rating, how it works), enquiry form, smooth scroll, page transitions and a showreel player.
 - [ ] Add real client testimonials to `testimonials` in `src/lib/studio.ts` (the section appears once it has entries).
 - [x] Move Who we are and How it works onto their own pages (/about, /how-it-works), with a mobile menu.
+- [x] Add an FAQ page and menu link.
+- [ ] Client to confirm and extend the FAQ answers (`faqs` in `src/lib/studio.ts`): pricing, delivery times, travel.

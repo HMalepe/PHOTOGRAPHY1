@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as FilmsRouteImport } from './routes/films'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as PortraitsRouteImport } from './routes/portraits'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FilmsRoute = FilmsRouteImport.update({
@@ -44,6 +50,7 @@ const PortraitsRoute = PortraitsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/films': typeof FilmsRoute
   '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/films': typeof FilmsRoute
   '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/films': typeof FilmsRoute
   '/how-it-works': typeof HowItWorksRoute
   '/portraits': typeof PortraitsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
+  fullPaths: '/' | '/about' | '/faq' | '/films' | '/how-it-works' | '/portraits'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
-  id: '__root__' | '/' | '/about' | '/films' | '/how-it-works' | '/portraits'
+  to: '/' | '/about' | '/faq' | '/films' | '/how-it-works' | '/portraits'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/faq'
+    | '/films'
+    | '/how-it-works'
+    | '/portraits'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  FaqRoute: typeof FaqRoute
   FilmsRoute: typeof FilmsRoute
   HowItWorksRoute: typeof HowItWorksRoute
   PortraitsRoute: typeof PortraitsRoute
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/films': {
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  FaqRoute: FaqRoute,
   FilmsRoute: FilmsRoute,
   HowItWorksRoute: HowItWorksRoute,
   PortraitsRoute: PortraitsRoute,

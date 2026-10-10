@@ -8,10 +8,12 @@ import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
 export function PageLayout({
   eyebrow,
   title,
+  ctaTitle = "Ready to take it to Valhalla?",
   children,
 }: {
   eyebrow: string;
   title: string;
+  ctaTitle?: string;
   children: ReactNode;
 }) {
   const ref = useGalleryScroll({ solidHeader: true });
@@ -27,7 +29,7 @@ export function PageLayout({
       {children}
       <section className="section cta" aria-labelledby="cta-heading">
         <h2 id="cta-heading" className="cta-title">
-          Ready to take it to Valhalla?
+          {ctaTitle}
         </h2>
         <Button variant="gallery" asChild>
           <Link to="/" hash="contact">
