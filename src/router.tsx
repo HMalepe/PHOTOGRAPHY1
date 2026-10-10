@@ -9,6 +9,8 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
+    // Cross-fade between category pages (browsers without the View Transitions API just cut).
+    defaultViewTransition: true,
     defaultPreloadStaleTime: 0,
   });
 

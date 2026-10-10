@@ -53,6 +53,7 @@ function PortraitsPage() {
           alt: "Expressive full-body portrait of a dancer in motion with flowing fabric",
         },
       ]}
+      enquiryProject="Photography"
       contactTitle="Book a portrait session"
       contactText="Individual portraits and creative sessions in Johannesburg."
     />
