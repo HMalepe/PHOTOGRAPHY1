@@ -11,6 +11,7 @@ export interface GalleryFilm {
 }
 
 type Phase = "idle" | "loading" | "playing" | "paused" | "failed";
+type Intent = "auto" | "play" | "pause";
 
 const LABEL: Record<Phase, string> = {
   idle: "Play",
@@ -21,16 +22,32 @@ const LABEL: Record<Phase, string> = {
 };
 
 /**
- * Muted, looping clip that starts loading as it nears the screen, plays while on screen, and fades
- * in over its poster once the first frame is really playing. If the clip can't load, the poster
- * stays and the control disappears. Never autoplays under reduced motion.
+ * Muted, looping clip that starts loading as it nears the screen and plays while on screen.
+ *
+ * Phones only allow playback that starts inside a tap, so tapping always calls `play()` directly in
+ * the tap handler: never via an observer or effect. The video itself is never transparent (the
+ * poster sits on top of it and fades away once it is really playing), because mobile Safari can
+ * refuse to start a video it considers invisible. If a clip can't load, the poster stays and the
+ * control disappears. Autoplay is skipped under reduced motion.
  */
 export function FilmClip({ film }: { film: GalleryFilm }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // "auto" plays whenever the clip is on screen unless the viewer prefers reduced motion; a click overrides it.
-  const [intent, setIntent] = useState<"auto" | "play" | "pause">("auto");
+  const intent = useRef<Intent>("auto");
+  const onScreen = useRef(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const [shown, setShown] = useState(false);
+
+  const startPlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    setPhase((current) => (current === "failed" || current === "playing" ? current : "loading"));
+    video.play().catch((error: unknown) => {
+      // AbortError just means we paused it again while it was starting. Otherwise the browser
+      // refused (autoplay blocked): fall back to a Play control, unless it is in fact playing.
+      if ((error as DOMException)?.name === "AbortError") return;
+      if (video.paused) setPhase((current) => (current === "failed" ? current : "paused"));
+    });
+  };
 
   // Start fetching shortly before the clip scrolls into view, so playback can begin instantly.
   useEffect(() => {
@@ -50,33 +67,27 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
     return () => near.disconnect();
   }, []);
 
+  // Autoplay while on screen (when allowed), pause when off screen or the tab is hidden.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    // React does not reliably reflect `muted` onto hydrated elements, and autoplay requires it.
+    // React sets `muted` as a property only; iOS also wants the attribute, so reflect both.
+    video.defaultMuted = true;
     video.muted = true;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let onScreen = false;
 
     const sync = () => {
-      const wanted = intent === "play" || (intent === "auto" && !reduced.matches);
-      if (onScreen && wanted && !document.hidden) {
-        setPhase((current) =>
-          current === "failed" ? current : current === "playing" ? current : "loading",
-        );
-        video.play().catch((error: unknown) => {
-          // AbortError just means we paused it again while it was starting.
-          if ((error as DOMException)?.name !== "AbortError")
-            setPhase((p) => (p === "failed" ? p : "paused"));
-        });
-      } else {
+      const wanted = intent.current === "play" || (intent.current === "auto" && !reduced.matches);
+      if (onScreen.current && wanted && !document.hidden) {
+        if (video.paused) startPlayback();
+      } else if (!video.paused) {
         video.pause();
       }
     };
 
     const visible = new IntersectionObserver(
       ([entry]) => {
-        onScreen = Boolean(entry?.isIntersecting);
+        onScreen.current = Boolean(entry?.isIntersecting);
         sync();
       },
       { threshold: 0.35 },
@@ -87,22 +98,38 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
       visible.disconnect();
       document.removeEventListener("visibilitychange", sync);
     };
-  }, [intent]);
+    // startPlayback only touches refs and stable state setters, so it is safe to omit from deps.
+  }, []);
+
+  // Runs inside the tap/click, which is what lets phones start playback.
+  const toggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!video.paused) {
+      intent.current = "pause";
+      video.pause();
+    } else {
+      intent.current = "play";
+      startPlayback();
+    }
+  };
 
   const failed = () => setPhase("failed");
-  const toggle = () => setIntent(phase === "playing" || phase === "loading" ? "pause" : "play");
   const lastSource = film.sources.length - 1;
+  const active = phase === "playing" || phase === "loading";
 
   return (
     <div className="film-window" data-phase={phase} data-shown={shown}>
-      <div className="film-media">
-        <FadeImage className="film-poster" src={film.poster} alt="" width={1200} height={800} />
+      <div className="film-media" onClick={toggle}>
         <video
           ref={videoRef}
           className="film-video"
           muted
           loop
           playsInline
+          webkit-playsinline="true"
+          disablePictureInPicture
+          disableRemotePlayback
           preload="none"
           aria-label={film.label}
           onPlaying={() => {
@@ -122,6 +149,7 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
             />
           ))}
         </video>
+        <FadeImage className="film-poster" src={film.poster} alt="" width={1200} height={800} />
       </div>
       {phase !== "failed" && (
         <button
@@ -130,7 +158,7 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
           data-playing={phase === "playing"}
           data-loading={phase === "loading"}
           onClick={toggle}
-          aria-label={`${phase === "playing" || phase === "loading" ? "Pause" : "Play"} ${film.title}`}
+          aria-label={`${active ? "Pause" : "Play"} ${film.title}`}
         >
           <span className="film-toggle-dot" aria-hidden="true" />
           <span aria-hidden="true">{LABEL[phase]}</span>

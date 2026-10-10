@@ -7,7 +7,7 @@ export interface ShowreelData {
   label: string;
 }
 
-type Status = "loading" | "playing" | "failed";
+type Status = "loading" | "playing" | "idle" | "failed";
 
 function ReelPlayer({ reel }: { reel: ShowreelData }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -22,7 +22,10 @@ function ReelPlayer({ reel }: { reel: ShowreelData }) {
     video.play().catch((error: unknown) => {
       if ((error as DOMException)?.name === "AbortError") return;
       video.muted = true;
-      video.play().catch(() => {});
+      video.play().catch(() => {
+        // Refused outright: the native controls are showing, so stop saying "Loading".
+        if (video.paused) setStatus((s) => (s === "failed" ? s : "idle"));
+      });
     });
   }, []);
 
@@ -34,8 +37,10 @@ function ReelPlayer({ reel }: { reel: ShowreelData }) {
         className="reel-video"
         poster={reel.poster}
         controls
+        autoPlay
         loop
         playsInline
+        webkit-playsinline="true"
         preload="auto"
         onPlaying={() => setStatus("playing")}
         onWaiting={() => setStatus((s) => (s === "failed" ? s : "loading"))}
@@ -50,7 +55,7 @@ function ReelPlayer({ reel }: { reel: ShowreelData }) {
           />
         ))}
       </video>
-      {status !== "playing" && (
+      {(status === "loading" || status === "failed") && (
         <p className="reel-status" role="status" data-status={status}>
           {status === "failed" ? "This film couldn't be loaded." : "Loading"}
         </p>
