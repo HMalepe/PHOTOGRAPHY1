@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PhotographyGallery } from "@/components/photography-gallery";
-import couple from "@/assets/wedding-couple.jpg";
-import celebration from "@/assets/wedding-celebration.jpg";
-import details from "@/assets/wedding-details.jpg";
-import dance from "@/assets/wedding-dance.jpg";
+import couple from "@/assets/wedding-couple.webp";
+import celebration from "@/assets/wedding-celebration.webp";
+import details from "@/assets/wedding-details.webp";
+import dance from "@/assets/wedding-dance.webp";
 import type { GalleryFilm } from "@/components/film-clip";
 import { mixkit } from "@/lib/placeholder-films";
 

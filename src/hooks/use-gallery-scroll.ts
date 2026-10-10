@@ -1,8 +1,17 @@
 import { useEffect, useRef } from "react";
+import { clamp01, frameMotion, frameProgress, REST_MOTION } from "@/lib/scroll-motion";
 
-const clamp = (value: number) => Math.max(0, Math.min(1, value));
+const round = (value: number) => Math.round(value * 100) / 100;
 
-/** Reversible, scroll-scrubbed motion without React renders on every frame. */
+/**
+ * Reversible, scroll-scrubbed motion without React renders on every frame.
+ *
+ * Performance rules, because a custom property written on an element re-styles its whole subtree:
+ *  - each value is written only onto the elements that use it (never onto the page root), and only
+ *    when it actually changed, so scrolling past the hero costs nothing further;
+ *  - frame positions are measured from layout offsets (which ignore transforms) and cached, so a
+ *    scroll frame does arithmetic only: no layout reads, and no feedback from the frame's own motion.
+ */
 export function useGalleryScroll({ solidHeader = false }: { solidHeader?: boolean } = {}) {
   const ref = useRef<HTMLElement>(null);
 
@@ -10,54 +19,91 @@ export function useGalleryScroll({ solidHeader = false }: { solidHeader?: boolea
     const root = ref.current;
     if (!root) return;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    const elements = Array.from(root.querySelectorAll<HTMLElement>("[data-scroll-frame]"));
+    const header = root.querySelector<HTMLElement>(".site-header");
+    const hero = root.querySelector<HTMLElement>(".hero");
+    const marquee = root.querySelector<HTMLElement>(".marquee-track");
+    const frames = Array.from(root.querySelectorAll<HTMLElement>("[data-scroll-frame]")).map(
+      (el) => ({
+        el,
+        direction: el.dataset["direction"] === "right" ? (1 as const) : (-1 as const),
+        top: 0,
+        height: 0,
+      }),
+    );
+
+    const written = new WeakMap<HTMLElement, Map<string, string>>();
+    const write = (el: HTMLElement, name: string, value: string) => {
+      let previous = written.get(el);
+      if (!previous) written.set(el, (previous = new Map()));
+      if (previous.get(name) === value) return;
+      previous.set(name, value);
+      el.style.setProperty(name, value);
+    };
+
+    const measure = () => {
+      for (const frame of frames) {
+        let top = 0;
+        for (
+          let node: HTMLElement | null = frame.el;
+          node;
+          node = node.offsetParent as HTMLElement | null
+        ) {
+          top += node.offsetTop;
+        }
+        frame.top = top;
+        frame.height = frame.el.offsetHeight;
+      }
+    };
+
+    let raf = 0;
     const update = () => {
-      frame = 0;
+      raf = 0;
       const reduced = preference.matches;
       const viewport = window.innerHeight;
-      for (const element of elements) {
-        const rect = element.getBoundingClientRect();
-        const p = clamp((viewport - rect.top) / (viewport + rect.height));
-        const direction = element.dataset["direction"] === "right" ? 1 : -1;
-        // enter runs 1 → 0 as the frame arrives; exit runs 0 → 1 as it leaves the top.
-        const enter = clamp(1 - p / 0.38);
-        const exit = clamp((p - 0.72) / 0.28);
-        element.style.setProperty(
-          "--scroll-x",
-          `${reduced ? 0 : direction * (enter * 70 + exit * 50)}px`,
-        );
-        element.style.setProperty("--scroll-y", `${reduced ? 0 : enter * 90 - exit * 60}px`);
-        element.style.setProperty(
-          "--scroll-rotation",
-          `${reduced ? 0 : direction * (enter * 3.5 - exit * 2.5)}deg`,
-        );
-        element.style.setProperty("--scroll-opacity", `${reduced ? 1 : clamp(1 - exit * 1.1)}`);
-        element.style.setProperty("--reveal", `${reduced ? 0 : enter * 100}%`);
-        element.style.setProperty("--media-shift", `${reduced ? 0 : (0.5 - p) * 80}px`);
-      }
       const y = window.scrollY;
-      root.style.setProperty(
-        "--hero-shift",
-        `${reduced ? 0 : Math.min(y * 0.35, viewport * 0.5)}px`,
-      );
-      root.style.setProperty(
-        "--hero-fade",
-        solidHeader ? "1" : `${reduced ? 0 : clamp(y / (viewport * 0.9))}`,
-      );
-      root.style.setProperty("--marquee-x", `${reduced ? 0 : -y * 0.3}px`);
+
+      for (const frame of frames) {
+        const motion = reduced
+          ? REST_MOTION
+          : frameMotion(frameProgress(frame.top - y, frame.height, viewport), frame.direction);
+        write(frame.el, "--scroll-x", `${round(motion.x)}px`);
+        write(frame.el, "--scroll-y", `${round(motion.y)}px`);
+        write(frame.el, "--scroll-rotation", `${round(motion.rotation)}deg`);
+        write(frame.el, "--scroll-opacity", `${round(motion.opacity)}`);
+        write(frame.el, "--reveal", `${round(motion.reveal)}%`);
+        write(frame.el, "--media-shift", `${round(motion.mediaShift)}px`);
+      }
+
+      const fade = solidHeader ? 1 : reduced ? 0 : clamp01(y / (viewport * 0.9));
+      if (header) write(header, "--hero-fade", fade.toFixed(3));
+      if (hero) {
+        write(hero, "--hero-fade", fade.toFixed(3));
+        write(hero, "--hero-shift", `${reduced ? 0 : round(Math.min(y * 0.35, viewport * 0.5))}px`);
+      }
+      if (marquee) write(marquee, "--marquee-x", `${reduced ? 0 : round(-y * 0.3)}px`);
     };
+
     const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+      if (!raf) raf = requestAnimationFrame(update);
     };
+    const remeasure = () => {
+      measure();
+      schedule();
+    };
+
+    // Layout shifts (fonts, images, an opened FAQ) move frames, so positions are refreshed with them.
+    const resize = new ResizeObserver(remeasure);
+    resize.observe(root);
+    measure();
     update();
     window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    window.addEventListener("resize", remeasure);
     preference.addEventListener("change", schedule);
     return () => {
-      cancelAnimationFrame(frame);
+      cancelAnimationFrame(raf);
+      resize.disconnect();
       window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener("resize", remeasure);
       preference.removeEventListener("change", schedule);
     };
   }, [solidHeader]);

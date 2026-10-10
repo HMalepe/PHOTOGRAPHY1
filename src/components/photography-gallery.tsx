@@ -1,5 +1,7 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { FadeImage } from "@/components/fade-image";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
+import { useReady } from "@/hooks/use-ready";
 import { studio } from "@/lib/studio";
 import { FilmClip, type GalleryFilm } from "@/components/film-clip";
 import { Showreel, type ShowreelData } from "@/components/showreel";
@@ -45,14 +47,23 @@ export function PhotographyGallery({
   contactText,
 }: PhotographyGalleryProps) {
   const galleryRef = useGalleryScroll();
+  const heroImage = useRef<HTMLImageElement>(null);
+  const ready = useReady(heroImage);
 
   return (
     <main ref={galleryRef} className="gallery-site">
       <SiteHeader />
 
-      <section className="hero" aria-labelledby="hero-title">
+      <section className="hero" aria-labelledby="hero-title" data-ready={ready || undefined}>
         <div className="hero-media">
-          <img src={cover} width={1024} height={1408} alt={coverAlt} fetchPriority="high" />
+          <img
+            ref={heroImage}
+            src={cover}
+            width={1024}
+            height={1408}
+            alt={coverAlt}
+            fetchPriority="high"
+          />
         </div>
         <div className="hero-curtain" aria-hidden="true" />
         <div className="hero-content">
@@ -91,7 +102,13 @@ export function PhotographyGallery({
                 data-direction={index % 2 ? "right" : "left"}
               >
                 <div className="work-media">
-                  <img src={work.image} width={1200} height={800} loading="lazy" alt={work.alt} />
+                  <FadeImage
+                    src={work.image}
+                    width={1200}
+                    height={800}
+                    loading="lazy"
+                    alt={work.alt}
+                  />
                 </div>
                 <figcaption>
                   <span className="work-title">{work.title}</span>
