@@ -27,4 +27,8 @@ describe("App routing", () => {
     expect(router.matchRoutes("/about").at(-1)?.routeId).toBe("/about");
     expect(router.matchRoutes("/how-it-works").at(-1)?.routeId).toBe("/how-it-works");
   });
+  it("matches the faq page", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/faq").at(-1)?.routeId).toBe("/faq");
+  });
 });

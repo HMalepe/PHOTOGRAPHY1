@@ -10,6 +10,7 @@ const NAV = [
   { to: "/portraits", label: "Portraits" },
   { to: "/about", label: "About" },
   { to: "/how-it-works", label: "How it works" },
+  { to: "/faq", label: "FAQ" },
 ] as const;
 
 /** Where "Enquire" leads: the form on this page, or the form on the home page from pages without one. */

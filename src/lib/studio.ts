@@ -11,13 +11,66 @@ export interface Testimonial {
  */
 export const testimonials: Testimonial[] = [];
 
+export interface Faq {
+  question: string;
+  answer: string;
+}
+
+const email = "takeittovalhallafilms@gmail.com";
+
+/**
+ * Drafted only from what the client's public Bark listing says about them. Prices, turnaround
+ * times and travel are deliberately left open: the client should confirm and extend these.
+ */
+export const faqs: Faq[] = [
+  {
+    question: "What do you film and photograph?",
+    answer:
+      "Weddings, music videos, corporate functions and events, interviews and live performances, plus photography. Everything is shot documentary-style.",
+  },
+  {
+    question: "What does documentary-style mean?",
+    answer:
+      "We stay out of the way and capture things as they happen instead of staging them. You get how it actually felt, not a performance of it.",
+  },
+  {
+    question: "Where are you based?",
+    answer:
+      "Johannesburg, South Africa. If your project is somewhere else, tell us where and we'll work out whether we can be there.",
+  },
+  {
+    question: "Do you take photographs as well as film?",
+    answer:
+      "Yes. Photography is part of what we do, and photographs can come alongside the film where you ask for them.",
+  },
+  {
+    question: "Can you edit footage we've already shot?",
+    answer:
+      "Video editing is one of our services. Message us about what you have and what you want it to become.",
+  },
+  {
+    question: "How much does it cost?",
+    answer:
+      "Every project is different, so we quote once we've heard about yours. The enquiry form has an optional budget field, which helps us suggest what's possible.",
+  },
+  {
+    question: "How far ahead should I book?",
+    answer:
+      "As early as you can. Send us your date and venue and we'll tell you whether we're free.",
+  },
+  {
+    question: "How do I get started?",
+    answer: `Send the enquiry form on any page, or email ${email}. Tell us what you're planning, the date and the place, and we'll reply to talk it through.`,
+  },
+];
+
 const bark = "https://www.bark.com/en/za/b/take-it-to-valhalla-films/LnpBm/";
 
 export const studio = {
   name: "Take It To Valhalla Films",
   shortName: "Take It To Valhalla",
   location: "Johannesburg, South Africa",
-  email: "takeittovalhallafilms@gmail.com",
+  email,
   services: [
     "Weddings",
     "Music Videos",
