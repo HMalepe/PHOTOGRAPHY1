@@ -11,3 +11,5 @@
 - [x] Move Who we are and How it works onto their own pages (/about, /how-it-works), with a mobile menu.
 - [x] Add an FAQ page and menu link.
 - [ ] Client to confirm and extend the FAQ answers (`faqs` in `src/lib/studio.ts`): pricing, delivery times, travel.
+- [x] Smooth scroll, loading and playback pass: scroll values written only where used, hero holds its entrance until fonts and photo are ready, images fade in, videos preload near the screen and fail gracefully.
+- [ ] Self-host the film clips (they are hot-linked from Mixkit) and replace the 1024px-wide hero photo with a larger original.

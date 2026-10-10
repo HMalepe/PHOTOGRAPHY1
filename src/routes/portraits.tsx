@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PhotographyGallery } from "@/components/photography-gallery";
-import portrait from "@/assets/photographer.jpg";
-import dancer from "@/assets/dancer.jpg";
+import portrait from "@/assets/photographer.webp";
+import dancer from "@/assets/dancer.webp";
 
 export const Route = createFileRoute("/portraits")({
   head: () => ({

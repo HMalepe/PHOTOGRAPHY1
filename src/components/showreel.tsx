@@ -1,10 +1,62 @@
-import { useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 export interface ShowreelData {
   sources: string[];
   poster: string;
   label: string;
+}
+
+type Status = "loading" | "playing" | "failed";
+
+function ReelPlayer({ reel }: { reel: ShowreelData }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [status, setStatus] = useState<Status>("loading");
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // Opened by a click, so sound is allowed. If the browser refuses anyway, fall back to muted
+    // playback; the controls let the viewer unmute.
+    video.muted = false;
+    video.play().catch((error: unknown) => {
+      if ((error as DOMException)?.name === "AbortError") return;
+      video.muted = true;
+      video.play().catch(() => {});
+    });
+  }, []);
+
+  const lastSource = reel.sources.length - 1;
+  return (
+    <>
+      <video
+        ref={videoRef}
+        className="reel-video"
+        poster={reel.poster}
+        controls
+        loop
+        playsInline
+        preload="auto"
+        onPlaying={() => setStatus("playing")}
+        onWaiting={() => setStatus((s) => (s === "failed" ? s : "loading"))}
+        onError={() => setStatus("failed")}
+      >
+        {reel.sources.map((src, index) => (
+          <source
+            key={src}
+            src={src}
+            type="video/mp4"
+            onError={index === lastSource ? () => setStatus("failed") : undefined}
+          />
+        ))}
+      </video>
+      {status !== "playing" && (
+        <p className="reel-status" role="status" data-status={status}>
+          {status === "failed" ? "This film couldn't be loaded." : "Loading"}
+        </p>
+      )}
+    </>
+  );
 }
 
 /** Hero button that opens the reel full screen, expanding from wherever it was clicked. */
@@ -30,11 +82,7 @@ export function Showreel({ reel }: { reel: ShowreelData }) {
           aria-describedby={undefined}
         >
           <DialogPrimitive.Title className="sr-only">{reel.label}</DialogPrimitive.Title>
-          <video className="reel-video" poster={reel.poster} controls autoPlay loop playsInline>
-            {reel.sources.map((src) => (
-              <source key={src} src={src} type="video/mp4" />
-            ))}
-          </video>
+          <ReelPlayer reel={reel} />
           <DialogPrimitive.Close className="reel-close">Close</DialogPrimitive.Close>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

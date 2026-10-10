@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { useGalleryScroll } from "@/hooks/use-gallery-scroll";
+import { useReady } from "@/hooks/use-ready";
 
 /** Text-led page: solid header, big title, content, then a pointer to the enquiry form. */
 export function PageLayout({
@@ -17,10 +18,11 @@ export function PageLayout({
   children: ReactNode;
 }) {
   const ref = useGalleryScroll({ solidHeader: true });
+  const ready = useReady();
   return (
     <main ref={ref} className="gallery-site">
       <SiteHeader enquire="home" />
-      <section className="page-hero" aria-labelledby="page-title">
+      <section className="page-hero" aria-labelledby="page-title" data-ready={ready || undefined}>
         <p className="eyebrow">{eyebrow}</p>
         <h1 id="page-title" className="page-title">
           <span>{title}</span>

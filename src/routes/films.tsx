@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PhotographyGallery } from "@/components/photography-gallery";
 import type { GalleryFilm } from "@/components/film-clip";
 import { mixkit } from "@/lib/placeholder-films";
-import dancer from "@/assets/dancer.jpg";
-import portrait from "@/assets/photographer.jpg";
-import celebration from "@/assets/wedding-celebration.jpg";
-import couple from "@/assets/wedding-couple.jpg";
+import dancer from "@/assets/dancer.webp";
+import portrait from "@/assets/photographer.webp";
+import celebration from "@/assets/wedding-celebration.webp";
+import couple from "@/assets/wedding-couple.webp";
 
 const films: GalleryFilm[] = [
   {
