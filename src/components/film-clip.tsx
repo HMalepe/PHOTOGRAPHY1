@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FadeImage } from "@/components/fade-image";
+import { mediaType } from "@/lib/media-type";
 
 export interface GalleryFilm {
   /** Tried in order; the browser falls through to the next source if one fails. */
@@ -115,6 +116,23 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
   };
 
   const failed = () => setPhase("failed");
+
+  // A browser can fetch a file yet be unable to play it (a codec it lacks). The <source> list only
+  // falls through when a file can't be fetched, so on any playback error move to the next format.
+  const nextSource = () => {
+    const video = videoRef.current;
+    if (!video) return false;
+    const at = film.sources.findIndex((src) => video.currentSrc.endsWith(src));
+    const next = film.sources[at + 1];
+    if (at < 0 || !next) return false;
+    // Switching source resets playback, so remember whether it was playing (or asked to) first.
+    // Under reduced motion nothing was playing, so nothing is started on the viewer's behalf.
+    const resume = !video.paused || intent.current === "play";
+    video.src = next;
+    video.load();
+    if (resume) startPlayback();
+    return true;
+  };
   const lastSource = film.sources.length - 1;
   const active = phase === "playing" || phase === "loading";
 
@@ -138,13 +156,15 @@ export function FilmClip({ film }: { film: GalleryFilm }) {
           }}
           onWaiting={() => setPhase((p) => (p === "playing" ? "loading" : p))}
           onPause={() => setPhase((p) => (p === "failed" || p === "idle" ? p : "paused"))}
-          onError={failed}
+          onError={() => {
+            if (!nextSource()) failed();
+          }}
         >
           {film.sources.map((src, index) => (
             <source
               key={src}
               src={src}
-              type="video/mp4"
+              type={mediaType(src)}
               onError={index === lastSource ? failed : undefined}
             />
           ))}
