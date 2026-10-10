@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { mediaType } from "@/lib/media-type";
 
 export interface ShowreelData {
   sources: string[];
@@ -29,6 +30,18 @@ function ReelPlayer({ reel }: { reel: ShowreelData }) {
     });
   }, []);
 
+  // See FilmClip: a playable-format fallback for browsers that can fetch a file but not decode it.
+  const nextSource = () => {
+    const video = videoRef.current;
+    if (!video) return false;
+    const at = reel.sources.findIndex((src) => video.currentSrc.endsWith(src));
+    const next = reel.sources[at + 1];
+    if (at < 0 || !next) return false;
+    video.src = next;
+    video.load();
+    video.play().catch(() => {});
+    return true;
+  };
   const lastSource = reel.sources.length - 1;
   return (
     <>
@@ -44,13 +57,15 @@ function ReelPlayer({ reel }: { reel: ShowreelData }) {
         preload="auto"
         onPlaying={() => setStatus("playing")}
         onWaiting={() => setStatus((s) => (s === "failed" ? s : "loading"))}
-        onError={() => setStatus("failed")}
+        onError={() => {
+          if (!nextSource()) setStatus("failed");
+        }}
       >
         {reel.sources.map((src, index) => (
           <source
             key={src}
             src={src}
-            type="video/mp4"
+            type={mediaType(src)}
             onError={index === lastSource ? () => setStatus("failed") : undefined}
           />
         ))}

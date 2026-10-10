@@ -16,3 +16,5 @@
 - [x] Fix video playback on phones: tapping Play (or the picture) now starts the clip inside the tap, so phones that refuse autoplay still play.
 - [x] Add a looping reel at the top of the Weddings and Films pages that plays placeholder clips in a random order.
 - [ ] Replace the placeholder reel clips with the client's own footage (pools live in `src/lib/placeholder-films.ts`).
+- [x] Self-host the film, hero-reel and showreel clips (public/clips, H.264 mp4 + webm) so they play on phones; removes the hot-linked Mixkit files.
+- [ ] Replace the placeholder clips in public/clips with the client's own footage (same file names, or add names in `src/lib/placeholder-films.ts`).

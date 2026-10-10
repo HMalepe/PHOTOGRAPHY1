@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PhotographyGallery } from "@/components/photography-gallery";
 import type { GalleryFilm } from "@/components/film-clip";
-import { filmsReel, mixkit } from "@/lib/placeholder-films";
+import { clip, filmsReel } from "@/lib/placeholder-films";
 import dancer from "@/assets/dancer.webp";
 import portrait from "@/assets/photographer.webp";
 import celebration from "@/assets/wedding-celebration.webp";
@@ -9,35 +9,35 @@ import couple from "@/assets/wedding-couple.webp";
 
 const films: GalleryFilm[] = [
   {
-    sources: mixkit(13019, "a-rapper-with-headphones-recording-in-the-studio"),
+    sources: clip("studio"),
     poster: portrait,
     title: "In the booth",
     category: "MUSIC VIDEO",
     label: "A rapper with headphones recording in a studio",
   },
   {
-    sources: mixkit(17631, "music-concert-crowd"),
+    sources: clip("stage"),
     poster: dancer,
     title: "Front row",
     category: "LIVE PERFORMANCE",
     label: "A crowd at a music concert under stage lights",
   },
   {
-    sources: mixkit(13192, "audience-raise-hands-at-business-conference"),
+    sources: clip("celebration"),
     poster: celebration,
     title: "The room responds",
     category: "CORPORATE EVENT",
     label: "Audience raising their hands at a business conference",
   },
   {
-    sources: mixkit(13011, "a-man-singing-in-the-recording-studio"),
+    sources: clip("dance"),
     poster: portrait,
     title: "The take",
     category: "MUSIC VIDEO",
     label: "A man singing into a microphone in a recording studio",
   },
   {
-    sources: mixkit(5217, "wedding-ceremony"),
+    sources: clip("ceremony"),
     poster: couple,
     title: "I do",
     category: "WEDDING FILM",
@@ -84,7 +84,7 @@ function FilmsPage() {
       filmHeading="Selected Films"
       heroReel={filmsReel}
       showreel={{
-        sources: mixkit(17631, "music-concert-crowd"),
+        sources: clip("stage"),
         poster: dancer,
         label: "Take It To Valhalla showreel",
       }}

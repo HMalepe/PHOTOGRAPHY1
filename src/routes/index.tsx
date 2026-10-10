@@ -5,25 +5,25 @@ import celebration from "@/assets/wedding-celebration.webp";
 import details from "@/assets/wedding-details.webp";
 import dance from "@/assets/wedding-dance.webp";
 import type { GalleryFilm } from "@/components/film-clip";
-import { mixkit, weddingReel } from "@/lib/placeholder-films";
+import { clip, weddingReel } from "@/lib/placeholder-films";
 
 const weddingFilms: GalleryFilm[] = [
   {
-    sources: mixkit(5217, "wedding-ceremony"),
+    sources: clip("ceremony"),
     poster: couple,
     title: "The ceremony",
     category: "WEDDING FILM",
     label: "Wedding ceremony film clip",
   },
   {
-    sources: mixkit(35895, "wedding-stuff-background-video"),
+    sources: clip("details"),
     poster: details,
     title: "The details",
     category: "WEDDING FILM",
     label: "Close-up film clip of wedding details",
   },
   {
-    sources: mixkit(40627, "bride-and-groom-at-their-wedding-standing-head-on-in-a"),
+    sources: clip("celebration"),
     poster: dance,
     title: "Hand in hand",
     category: "WEDDING FILM",
@@ -91,7 +91,7 @@ function WeddingsPage() {
       filmHeading="Wedding Films"
       heroReel={weddingReel}
       showreel={{
-        sources: mixkit(5217, "wedding-ceremony"),
+        sources: clip("ceremony"),
         poster: couple,
         label: "Wedding showreel",
       }}

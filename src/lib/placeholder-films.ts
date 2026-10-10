@@ -1,20 +1,14 @@
-// Placeholder clips from Mixkit's free stock library until the client's own films replace them.
-// Mixkit has served files under two URL schemes; listing both lets the browser fall through.
-export const mixkit = (id: number, slug: string) => [
-  `https://assets.mixkit.co/videos/${id}/${id}-720.mp4`,
-  `https://assets.mixkit.co/videos/preview/mixkit-${slug}-${id}-large.mp4`,
-];
+// Self-hosted placeholder clips (public/clips): slow camera moves over the placeholder photos.
+//
+// They replace third-party stock footage that was hot-linked from Mixkit. A hot-linked file can be
+// blocked or moved at any time, and some phones refuse a video unless the server answers partial
+// ("range") requests properly, so a clip on the site's own domain is the reliable choice.
+//
+// Each clip comes as H.264 .mp4 (plays everywhere, including iPhones) with a .webm fallback. To use
+// the client's real footage, export the same two files (720p, no audio, small) into public/clips and
+// point a name at them: nothing else in the site needs to change.
+export const clip = (name: string) => [`/clips/${name}.mp4`, `/clips/${name}.webm`];
 
-// Pools for the looping reel at the top of the page. Only clips whose Mixkit license allows
-// commercial use are listed. Each visit plays them in a different random order.
-export const weddingReel = [
-  mixkit(5217, "wedding-ceremony"),
-  mixkit(35895, "wedding-stuff-background-video"),
-  mixkit(40627, "bride-and-groom-at-their-wedding-standing-head-on-in-a"),
-];
-export const filmsReel = [
-  ...weddingReel,
-  mixkit(17631, "music-concert-crowd"),
-  mixkit(13019, "a-rapper-with-headphones-recording-in-the-studio"),
-  mixkit(13011, "a-man-singing-in-the-recording-studio"),
-];
+// Pools for the looping reel at the top of the page. Each visit plays them in a different random order.
+export const weddingReel = [clip("ceremony"), clip("details"), clip("celebration"), clip("dance")];
+export const filmsReel = [...weddingReel, clip("stage"), clip("studio")];
