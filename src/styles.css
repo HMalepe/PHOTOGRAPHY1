@@ -310,6 +310,9 @@ body::after {
   transform: translateY(var(--hero-shift, 0px));
 }
 .hero-media img {
+  position: relative;
+  z-index: 2;
+  transition: opacity 1.4s var(--ease);
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -744,6 +747,7 @@ body::after {
 .hero:not([data-ready]) .eyebrow,
 .hero:not([data-ready]) .hero-meta,
 .hero:not([data-ready]) .reel-trigger,
+.hero:not([data-ready]) .reel-pause,
 .page-hero:not([data-ready]) .eyebrow,
 .page-hero:not([data-ready]) .page-title span {
   animation-play-state: paused;
@@ -876,6 +880,93 @@ body::after {
 }
 
 /* Showreel */
+.hero[data-reel-live] .hero-media img {
+  opacity: 0;
+}
+/*
+ * The reel is sized 8% larger instead of scaled (the same crop as the photo's settled zoom, without
+ * resampling a full-screen video every frame). The grayscale grade is applied once, only on
+ * desktop-class devices: a CSS filter over full-screen video is the costly part on weaker phone
+ * graphics, so phones and tablets play it in natural colour under a light dark overlay.
+ */
+.hero-reel {
+  position: absolute;
+  inset: -4%;
+}
+.hero-reel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: oklch(0 0 0 / 0.22);
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 1025px) {
+  .hero-reel {
+    filter: grayscale(1) contrast(1.06) brightness(0.8);
+  }
+  .hero-reel::after {
+    display: none;
+  }
+}
+.hero-reel-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  transition: opacity 1.1s var(--ease);
+}
+.hero-reel-video[data-top="true"] {
+  z-index: 1;
+}
+.hero-reel-video[data-fading="true"] {
+  opacity: 0;
+}
+.hero-reel-video[data-instant="true"] {
+  transition: none;
+}
+.reel-pause {
+  position: absolute;
+  z-index: 2;
+  top: 134px;
+  left: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  font: 500 10px/1.2 var(--font-sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  background: oklch(0 0 0 / 0.5);
+  border: 1px solid oklch(1 0 0 / 0.22);
+  cursor: pointer;
+  opacity: calc(1 - var(--hero-fade, 0) * 1.6);
+  transition: border-color 0.3s var(--ease);
+  animation: fade 1s var(--ease) 1.6s backwards;
+}
+.reel-pause:hover {
+  border-color: var(--primary);
+}
+.reel-pause:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+.reel-pause-icon {
+  width: 8px;
+  height: 10px;
+  border-inline: 3px solid currentColor;
+}
+.reel-pause-icon[data-paused="true"] {
+  width: 0;
+  height: 0;
+  border-inline: 0;
+  border-left: 8px solid currentColor;
+  border-block: 5px solid transparent;
+}
 .reel-trigger {
   position: absolute;
   z-index: 2;
@@ -893,10 +984,9 @@ body::after {
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--foreground);
-  background: oklch(0 0 0 / 0.28);
+  background: oklch(0 0 0 / 0.42);
   border: 1px solid color-mix(in oklab, var(--foreground) 45%, transparent);
   border-radius: 50%;
-  backdrop-filter: blur(8px);
   cursor: pointer;
   opacity: calc(1 - var(--hero-fade, 0) * 1.6);
   transition:
@@ -1435,6 +1525,9 @@ body::after {
   }
 }
 @media (max-width: 760px) {
+  .reel-pause {
+    top: 98px;
+  }
   .site-header {
     grid-template-columns: auto 1fr;
     padding-block: 16px;

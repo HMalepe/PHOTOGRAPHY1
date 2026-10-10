@@ -14,3 +14,5 @@
 - [x] Smooth scroll, loading and playback pass: scroll values written only where used, hero holds its entrance until fonts and photo are ready, images fade in, videos preload near the screen and fail gracefully.
 - [ ] Self-host the film clips (they are hot-linked from Mixkit) and replace the 1024px-wide hero photo with a larger original.
 - [x] Fix video playback on phones: tapping Play (or the picture) now starts the clip inside the tap, so phones that refuse autoplay still play.
+- [x] Add a looping reel at the top of the Weddings and Films pages that plays placeholder clips in a random order.
+- [ ] Replace the placeholder reel clips with the client's own footage (pools live in `src/lib/placeholder-films.ts`).

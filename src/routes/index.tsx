@@ -5,7 +5,7 @@ import celebration from "@/assets/wedding-celebration.webp";
 import details from "@/assets/wedding-details.webp";
 import dance from "@/assets/wedding-dance.webp";
 import type { GalleryFilm } from "@/components/film-clip";
-import { mixkit } from "@/lib/placeholder-films";
+import { mixkit, weddingReel } from "@/lib/placeholder-films";
 
 const weddingFilms: GalleryFilm[] = [
   {
@@ -89,6 +89,7 @@ function WeddingsPage() {
       ]}
       films={weddingFilms}
       filmHeading="Wedding Films"
+      heroReel={weddingReel}
       showreel={{
         sources: mixkit(5217, "wedding-ceremony"),
         poster: couple,

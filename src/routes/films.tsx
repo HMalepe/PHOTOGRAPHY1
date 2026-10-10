@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PhotographyGallery } from "@/components/photography-gallery";
 import type { GalleryFilm } from "@/components/film-clip";
-import { mixkit } from "@/lib/placeholder-films";
+import { filmsReel, mixkit } from "@/lib/placeholder-films";
 import dancer from "@/assets/dancer.webp";
 import portrait from "@/assets/photographer.webp";
 import celebration from "@/assets/wedding-celebration.webp";
@@ -82,6 +82,7 @@ function FilmsPage() {
       }
       films={films}
       filmHeading="Selected Films"
+      heroReel={filmsReel}
       showreel={{
         sources: mixkit(17631, "music-concert-crowd"),
         poster: dancer,
